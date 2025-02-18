@@ -33,7 +33,7 @@ import { COLORS } from '../helpers/colors.ts';
     .execute();
 
   console.log('Consulta: ', usersQuery);
-  // Select id, name, email from users where age > 18 and country = 'Cri' order by name ASC limit 10;
+  // select id, name, email from users where age > 18 and country = 'Cri' order by name ASC limit 10;
  */
 
 //! Solución
@@ -50,28 +50,38 @@ class QueryBuilder {
   }
 
   select(...fields: string[]): QueryBuilder {
-    throw new Error('Method not implemented.');
+    this.fields = fields.length ? fields : ['*'];
+    return this;
   }
 
   where(condition: string): QueryBuilder {
-    throw new Error('Method not implemented.');
+    this.conditions.push(condition);
+    return this;
   }
 
   orderBy(field: string, direction: 'ASC' | 'DESC' = 'ASC'): QueryBuilder {
-    throw new Error('Method not implemented.');
+    this.orderFields.push(`${field} ${direction}`);
+    return this;
   }
 
   limit(count: number): QueryBuilder {
-    throw new Error('Method not implemented.');
+    this.limitCount = count;
+    return this;
   }
 
   execute(): string {
     // Select id, name, email from users where age > 18 and country = 'Cri' order by name ASC limit 10;
-    throw new Error('Method not implemented.');
+    const selectClause = `SELECT ${this.fields.join(', ')} FROM ${this.table}`;
+    const whereClause = this.conditions.length ? `WHERE ${this.conditions.join(' AND ')}` : '';
+    const orderClause = this.orderFields.length ? `ORDER BY ${this.orderFields.join(', ')}` : '';
+    const limitClause = this.limitCount ? `LIMIT ${this.limitCount}` : '';
+
+    return `${selectClause} ${whereClause} ${orderClause} ${limitClause}`.trim().concat(';');
   }
 }
 
 function main() {
+  console.log();
   const usersQuery = new QueryBuilder('users')
     .select('id', 'name', 'email')
     .where('age > 18')
@@ -80,8 +90,11 @@ function main() {
     .limit(10)
     .execute();
 
-  console.log('%cConsulta:\n', COLORS.red);
+  console.log('%cConsulta:', COLORS.red);
   console.log(usersQuery);
+  
+
+  console.log();
 }
 
 main();

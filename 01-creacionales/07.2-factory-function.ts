@@ -27,17 +27,35 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// Función fábrica que crea un manejador de logs
+//? Función fábrica que crea un manejador de logs
 type LogLevel = 'info' | 'warn' | 'error';
 
 function createLogger(level: LogLevel) {
   // Retorna una función que recibe el "message" como argumento
   // Completar: implementar el logger con formato y color para cada nivel
-  throw new Error('Not implemented');
+  return (message: string) => { 
+    const date = formatDate(new Date());
+    
+    const logs = {
+      info: `INFO:${date}`,
+      warn: `WARNING:${date}`,
+      error: `ERROR:${date}`,
+    };
+
+    const logColor = {
+      info: COLORS.blue,
+      warn: COLORS.yellow,
+      error: COLORS.red,
+    };
+
+    console.log(`%c[${logs[level]}] ${message}`, logColor[level]);
+  }
 }
 
-// Ejemplo de uso
+//? Ejemplo de uso
 function main() {
+  console.log();
+
   const infoLogger = createLogger('info');
   const warnLogger = createLogger('warn');
   const errorLogger = createLogger('error');
@@ -45,6 +63,8 @@ function main() {
   infoLogger('Aplicación iniciada correctamente.');
   warnLogger('El uso de memoria está alto.');
   errorLogger('Error de conexión a la base de datos.');
+
+  console.log();
 }
 
 main();

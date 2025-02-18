@@ -1,3 +1,4 @@
+import { COLORS } from '../helpers/colors.ts';
 /**
  * ! Patrón Prototype:
 
@@ -11,26 +12,33 @@
  */
 
 class Pokemon {
-  name: string;
+  /* name: string;
   type: string;
   level: number;
-  attacks: string[];
+  attacks: string[]; */
 
-  constructor(name: string, type: string, level: number, attacks: string[]) {
-    throw new Error('Method not implemented.');
+  constructor(public name: string, public type: string, public level: number, public attacks: string[]) {
+   /*  this.name = name;
+    this.type = type;
+    this.level = level;
+    this.attacks = attacks; */
   }
 
   // Método para clonar el Pokémon
   clone(): Pokemon {
     // Los ataques deben de evitar pasarse por referencia, es decir, no deben de ser el mismo arreglo.
     // Completar: Debe devolver un nuevo Pokémon con los mismos atributos
+
+    //* En los ataques usamos el [...this.attacks] para que no se pase por referencia, es decir, no deben de ser 
+    //* el mismo arreglo y se cree uno nuevo para que no se modifique el original.
+    return new Pokemon(this.name, this.type, this.level, [...this.attacks]);
   }
 
   displayInfo(): void {
     console.log(
-      `Nombre: ${this.name}\nTipo: ${this.type}\nNivel: ${
+      `\nNombre: ${this.name}\nTipo: ${this.type}\nNivel: ${
         this.level
-      }\nAtaques: ${this.attacks.join(', ')}`
+      }\nAtaques: ${this.attacks.join(", ")}`
     );
   }
 }
@@ -49,3 +57,26 @@ class Pokemon {
 
 // basePokemon.displayInfo(); // Aquí no debe de aparecer "Lanzallamas"
 // clone1.displayInfo();
+
+function main() {
+  console.log();
+
+  const basePokemon = new Pokemon("Charmander", "Fuego", 1, [
+    "Llamarada",
+    "Arañazo",
+  ]);
+  const clone1 = basePokemon.clone();
+  clone1.name = "Charmeleon";
+  clone1.level = 16;
+  clone1.attacks.push("Lanzallamas");
+
+  console.log("%cPokémon base:",COLORS.red);
+  basePokemon.displayInfo(); // Aquí no debe de aparecer "Lanzallamas"
+
+  console.log("\n%cPokémon clonado:",COLORS.pink);
+  clone1.displayInfo();
+
+  console.log();
+}
+
+main();

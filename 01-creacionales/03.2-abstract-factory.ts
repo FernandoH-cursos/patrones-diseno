@@ -1,3 +1,4 @@
+import { COLORS } from '../helpers/colors.ts';
 /**
  * ! Abstract Factory:
  * Es un patrón de diseño que permite crear familias de objetos relacionados
@@ -28,7 +29,8 @@
 	  •	Ejecuten el código para asegurarse de que cada fábrica produce el tipo correcto de vehículo y motor.
 
  */
-// 1. Interfaces de Vehicle y Engine
+
+//? 1. Interfaces de Vehicle y Engine
 interface Vehicle {
   assemble(): void;
 }
@@ -37,47 +39,71 @@ interface Engine {
   start(): void;
 }
 
-// 2. Clases Concretas de Productos
+//? 2. Clases Concretas de Productos
 
-class ElectricCar {
+class ElectricCar implements Vehicle {
   // Implementación del método assemble
   // 'Ensamblando un auto eléctrico'
+  assemble(): void {
+    console.log('Ensamblando un auto %celéctrico',COLORS.green);
+  }
+  
 }
 
-class GasCar {
+class GasCar implements Vehicle {
   // Implementación del método assemble
   // 'Ensamblando un auto de combustión'
+  assemble(): void {
+    console.log('Ensamblando un auto de %ccombustión',COLORS.green);
+  }
 }
 
-class ElectricEngine {
+class ElectricEngine implements Engine {
   // Implementación del método start
   // 'Arrancando motor eléctrico'
+  start(): void {
+    console.log('Arrancando motor %celéctrico',COLORS.green);
+  }
 }
 
-class GasEngine {
+class GasEngine implements Engine {
   // Implementación del método start
   // 'Arrancando motor de combustión'
+  start(): void {
+    console.log('Arrancando motor de %ccombustión',COLORS.green);
+  }
 }
 
-// 3. Interfaz de la Fábrica Abstracta
-
+//? 3. Interfaz de la Fábrica Abstracta
 interface VehicleFactory {
   createVehicle(): Vehicle;
   createEngine(): Engine;
 }
 
-// 4. Clases Concretas de Fábricas
-
+//? 4. Clases Concretas de Fábricas
 class ElectricVehicleFactory implements VehicleFactory {
   // Implementación de los métodos createVehicle y createEngine
+  createVehicle(): Vehicle {
+    return new ElectricCar();
+  }
+
+  createEngine(): Engine {
+    return new ElectricEngine(); 
+  }
 }
 
 class GasVehicleFactory implements VehicleFactory {
   // Implementación de los métodos createVehicle y createEngine
+  createVehicle(): Vehicle {
+    return new GasCar();
+  }
+
+  createEngine(): Engine {
+    return new GasEngine();
+  }
 }
 
-// 5. Código Cliente
-
+//? 5. Código Cliente
 function main(factory: VehicleFactory) {
   const vehicle = factory.createVehicle();
   const engine = factory.createEngine();
@@ -86,9 +112,13 @@ function main(factory: VehicleFactory) {
   engine.start();
 }
 
-// Pruebas
-console.log('Creando vehículo eléctrico:');
-main(new ElectricVehicleFactory());
+const electricFactory = new ElectricVehicleFactory();
+const gasFactory = new GasVehicleFactory();
 
-console.log('\nCreando vehículo de combustión:');
-main(new GasVehicleFactory());
+// Pruebas
+console.log("\n%cCreando vehículo eléctrico:",COLORS.blue);
+main(electricFactory);
+
+console.log("\n%cCreando vehículo de combustión:", COLORS.blue);
+main(gasFactory);
+console.log();
