@@ -10,13 +10,13 @@
 
 import { COLORS } from '../helpers/colors.ts';
 
-// 1. Interfaz Approver
+//? 1. Interfaz Approver
 interface Approver {
   setNext(approver: Approver): Approver;
   approveRequest(amount: number): void;
 }
 
-// 2. Clase Abstracta BaseApprover para manejar la cadena
+//? 2. Clase Abstracta BaseApprover para manejar la cadena
 abstract class BaseApprover implements Approver {
   private nextApprover: Approver | null = null;
 
@@ -33,38 +33,48 @@ abstract class BaseApprover implements Approver {
       this.nextApprover.approveRequest(amount);
       return;
     } 
-    
-    
+      
     console.log('Solicitud no pudo ser aprobada.');
     
   }
 }
 
-// 3. Clases Concretas de Aprobadores
-
+//? 3. Clases Concretas de Aprobadores
 class Supervisor extends BaseApprover {
   // TODO: Implementar el método approveRequest si el monto es menor o igual a 1000
   // TODO: Si el monto es mayor a 1000, pasar la solicitud al siguiente aprobador
   override approveRequest(amount: number): void {
-    throw new Error('Method not implemented.');
+    if (amount <= 1000) {
+      console.log(`%cSolicitud aprobada por el Supervisor`, COLORS.green);
+      return;
+    }
+
+    this.next(amount);
+    
   }
 }
 
 class Manager extends BaseApprover {
   //TODO: Implementar el método approveRequest si el monto es menor o igual a 5000
   // TODO: Si el monto es mayor a 5000, pasar la solicitud al siguiente aprobador
-
   override approveRequest(amount: number): void {
-    throw new Error('Method not implemented.');
+    if (amount <= 5000) {
+      console.log(`%cSolicitud aprobada por el Gerente`, COLORS.green);
+      return;
+    }
+
+    this.next(amount);
   }
 }
 
 class Director extends BaseApprover {
-  // TODO: Implementar el método approveRequest si el monto
+  // TODO: Implementar el método approveRequest si el monto se aprueba sin importar el monto
+  override approveRequest(): void {
+    console.log(`%cSolicitud aprobada por el Director`, COLORS.green);
+  }
 }
 
-// 4. Código Cliente para probar la cadena de responsabilidad
-
+//? 4. Código Cliente para probar la cadena de responsabilidad
 function main() {
   const supervisor = new Supervisor();
   const manager = new Manager();

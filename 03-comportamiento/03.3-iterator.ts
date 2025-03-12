@@ -9,7 +9,7 @@
  * https://refactoring.guru/es/design-patterns/iterator
  */
 
-// Clase que representa una Carta de la baraja
+//? Clase que representa una Carta de la baraja
 class Card {
   name: string;
   value: number;
@@ -20,7 +20,7 @@ class Card {
   }
 }
 
-// Clase que representa la colección de Cartas
+//? Clase que representa la colección de Cartas
 class CardCollection {
   private cards: Card[] = [];
 
@@ -30,14 +30,26 @@ class CardCollection {
 
   //TODO: Implementación del iterador usando Symbol.iterator
   // Symbol.iterator (): IterableIterator<Card>
+  *[Symbol.iterator](): IterableIterator<Card> {
+    for (const card of this.cards) {
+      yield card;
+    }
+  }
 
   // TODO: Implementación del iterador usando Generadores
   // *getCard(): IterableIterator<Card>
+  *getCard(): IterableIterator <Card> {
+    for (const card of this.cards) {
+      yield card;
+    }
+  }
+    
 }
 
-// Código Cliente para probar el iterador
-
+//? Código Cliente para probar el iterador
 function main(): void {
+  console.log();
+
   const deck = new CardCollection();
 
   // Agregar algunas cartas a la colección
@@ -51,6 +63,12 @@ function main(): void {
   for (const card of deck) {
     console.log(`Carta: ${card.name}, Valor: ${card.value}`);
   }
+  
+  /* for (const card of deck.getCard()) {
+    console.log(`Carta: ${card.name}, Valor: ${card.value}`);
+  } */
+
+  console.log();
 }
 
 main();

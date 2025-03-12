@@ -10,40 +10,50 @@
  * https://refactoring.guru/es/design-patterns/mediator
  */
 
-/**
+/*
  * 1.	Clase ControlTower:
-	•	Actúa como el Mediador entre los aviones. 
-    La torre de control coordina las comunicaciones entre los aviones 
-    para evitar colisiones y recibir sus solicitudes de despegue 
-    o aterrizaje.
-
-	2.	Clase Airplane:
-	•	Representa a un avión que puede enviar y recibir mensajes 
-    a través de la torre de control. 
-    Los aviones no se comunican directamente entre sí, 
-    sino a través de la torre de control, que gestiona la información.
-
-	3.	Interacciones:
-	•	Los aviones pueden solicitar permiso para aterrizar o despegar, 
-    y la torre de control enviará mensajes a los demás aviones 
-    notificándoles de la actividad de cada avión.
+ *	•	Actúa como el Mediador entre los aviones.
+ *    La torre de control coordina las comunicaciones entre los aviones
+ *    para evitar colisiones y recibir sus solicitudes de despegue
+ *    o aterrizaje.
+ *
+ *	2.	Clase Airplane:
+ *	•	Representa a un avión que puede enviar y recibir mensajes
+ *    a través de la torre de control.
+ *    Los aviones no se comunican directamente entre sí,
+ *    sino a través de la torre de control, que gestiona la información.
+ *
+ *	3.	Interacciones:
+ *	•	Los aviones pueden solicitar permiso para aterrizar o despegar,
+ *    y la torre de control enviará mensajes a los demás aviones
+ *    notificándoles de la actividad de cada avión.
  */
 
-import { COLORS } from '../helpers/colors.ts';
+import { COLORS } from "../helpers/colors.ts";
 
-// Clase Mediador - ControlTower
+//? Clase Mediador - ControlTower
 class ControlTower {
   private airplanes: Airplane[] = [];
 
-  // Registrar un avión en la torre de control
+  //* Registrar un avión en la torre de control
   // TODO: Implementar el método registerAirplane
   // registerAirplane(airplane: Airplane)
+  registerAirplane(airplane: Airplane): void {
+    this.airplanes.push(airplane);
+  }
 
-  // Enviar un mensaje de un avión a todos los demás
+  //* Enviar un mensaje de un avión a todos los demás
   //TODO: Implementar el método sendMessage
   // sendMessage(sender: Airplane, message: string): void
+  sendMessage(sender: Airplane, message: string): void {
+    this.airplanes
+      .filter((airplane) => airplane !== sender)
+      .forEach((airplane) => {
+        airplane.receiveMessage(sender, message);
+      });
+  }
 
-  // Coordinación de aterrizaje
+  //* Coordinación de aterrizaje
   requestLanding(sender: Airplane): void {
     console.log(
       `\n%cTorre de Control: %cPermiso de aterrizaje concedido a ${sender.getId()}`,
@@ -54,7 +64,7 @@ class ControlTower {
     this.sendMessage(sender, `${sender.getId()} está aterrizando.`);
   }
 
-  // Coordinación de despegue
+  //* Coordinación de despegue
   requestTakeoff(sender: Airplane): void {
     console.log(
       `\n%cTorre de Control: %cPermiso de despegue concedido a ${sender.getId()}`,
@@ -66,7 +76,7 @@ class ControlTower {
   }
 }
 
-// Clase Colega - Airplane
+//? Clase Colega - Airplane
 class Airplane {
   private id: string;
   private controlTower: ControlTower;
@@ -76,27 +86,30 @@ class Airplane {
     this.controlTower = controlTower;
 
     // TODO: Registrar el avión en la torre de control
+    this.controlTower.registerAirplane(this);
   }
 
   getId(): string {
     return this.id;
   }
 
-  // Solicitar aterrizaje a la torre de control
+  //* Solicitar aterrizaje a la torre de control
   requestLanding(): void {
-    console.log(`${this.id} solicita permiso para aterrizar.`);
+    console.log(`\n${this.id} solicita permiso para aterrizar.`);
 
     // TODO: Solicitar aterrizaje a la torre de control
+    this.controlTower.requestLanding(this);
   }
 
-  // Solicitar despegue a la torre de control
+  //* Solicitar despegue a la torre de control
   requestTakeoff(): void {
-    console.log(`${this.id} solicita permiso para despegar.`);
+    console.log(`\n${this.id} solicita permiso para despegar.`);
 
     // TODO: Solicitar despegue a la torre de control
+    this.controlTower.requestTakeoff(this);
   }
 
-  // Recibir mensaje de otros aviones
+  //* Recibir mensaje de otros aviones
   receiveMessage(sender: Airplane, message: string): void {
     console.log(
       `${this.id} recibe mensaje de %c${sender.getId()}: "${message}"`,
@@ -105,19 +118,23 @@ class Airplane {
   }
 }
 
-// Código Cliente para probar el patrón Mediator
+//? Código Cliente para probar el patrón Mediator
 // ! Aquí no hay nada que modificar en este bloque
 function main(): void {
+  console.log();
+
   const controlTower = new ControlTower();
 
-  const airplane1 = new Airplane('Vuelo 101', controlTower);
-  const airplane2 = new Airplane('Vuelo 202', controlTower);
-  const airplane3 = new Airplane('Vuelo 303', controlTower);
+  const airplane1 = new Airplane("Vuelo 101", controlTower);
+  const airplane2 = new Airplane("Vuelo 202", controlTower);
+  const airplane3 = new Airplane("Vuelo 303", controlTower);
 
   // Ejemplo de interacciones
   airplane1.requestLanding();
   airplane2.requestTakeoff();
   airplane3.requestLanding();
+
+  console.log();
 }
 
 main();

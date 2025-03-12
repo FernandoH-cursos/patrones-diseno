@@ -11,9 +11,9 @@
 
 import { COLORS } from '../helpers/colors.ts';
 
-// Una pizarra donde se pueden agregar figuras
+//TODO: Una pizarra donde se pueden agregar figuras
 
-// Clase Memento - DrawingMemento
+//? Clase Memento - DrawingMemento
 class DrawingMemento {
   private shapes: string[];
 
@@ -27,14 +27,14 @@ class DrawingMemento {
   }
 }
 
-// Clase Originator - DrawingBoard
+//? Clase Originator - DrawingBoard
 class DrawingBoard {
   private shapes: string[] = [];
 
   // Agregar una figura a la pizarra
   addShape(shape: string): void {
     this.shapes.push(shape);
-    console.log(`Figura agregada: ${shape}`);
+    console.log(`\nFigura agregada: ${shape}`);
   }
 
   // Mostrar el estado actual de la pizarra
@@ -45,7 +45,7 @@ class DrawingBoard {
   // Crear un Memento del estado actual de la pizarra
   save(): DrawingMemento {
     // TODO: Implementar el método save para guardar el estado actual
-    throw new Error('Method not implemented.');
+   return new DrawingMemento(this.shapes);
   }
 
   // Restaurar el estado de la pizarra desde un Memento
@@ -55,26 +55,28 @@ class DrawingBoard {
   }
 }
 
-// Clase Caretaker - History
+//? Clase Caretaker - History
 class History {
   private mementos: DrawingMemento[] = [];
 
   // Guardar un Memento
   // TODO: Implementar push para guardar en la historia
   push(memento: DrawingMemento): void {
-    throw new Error('Method not implemented.');
+    this.mementos.push(memento);
+    console.log('%cEstado guardado en la historia.', COLORS.green);
   }
 
   // Recuperar el último Memento
   // TODO: Implementar pop para recuperar el último memento
   pop(): DrawingMemento | undefined {
-    throw new Error('Method not implemented.');
+    return this.mementos.pop();
   }
 }
 
-// Código Cliente para probar el patrón Memento
-
+//? Código Cliente para probar el patrón Memento
 function main(): void {
+  console.log();
+
   const drawingBoard = new DrawingBoard();
   const history = new History();
 
@@ -95,6 +97,9 @@ function main(): void {
   // Deshacer otro cambio
   drawingBoard.restore(history.pop()!);
   drawingBoard.showBoard(); // Mostrar estado después de deshacer nuevamente
+
+
+  console.log();
 }
 
 main();

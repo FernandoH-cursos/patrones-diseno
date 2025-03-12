@@ -9,7 +9,7 @@
  * https://refactoring.guru/es/design-patterns/iterator
  */
 
-// Clase que representa un Pokémon
+//* Clase que representa un Pokémon
 class Pokemon {
   name: string;
   type: string;
@@ -20,7 +20,7 @@ class Pokemon {
   }
 }
 
-// Clase que representa la colección de Pokemons
+//* Clase que representa la colección de Pokemons
 class PokemonCollection {
   private pokemons: Pokemon[] = [];
 
@@ -29,16 +29,27 @@ class PokemonCollection {
   }
 
   //TODO: Implementación del iterador usando una función generadora
+  *getPokemons(): IterableIterator<Pokemon> {
+    for (const pokemon of this.pokemons) {
+      yield pokemon;
+    }
+    
+  }
 
   // Implementación del iterador usando un método con Symbol.iterator
   // para hacer que la colección sea iterable
   // yield* delega la responsabilidad de la iteración a la colección de Pokemons
   // TODO: *[Symbol.iterator]()
+  *[Symbol.iterator](): IterableIterator<Pokemon> {
+    yield* this.pokemons;
+  }
 }
 
 // Código Cliente para probar el iterador con función generadora
 
 function main(): void {
+  console.log();
+
   const pokedex = new PokemonCollection();
 
   // Agregar Pokemones a la colección
@@ -49,12 +60,15 @@ function main(): void {
 
   // Recorremos la colección usando for...of, gracias a la función generadora
   console.log('Recorriendo la colección de Pokemons:');
-  // for (const pokemon of pokedex.getPokemons()) {
-  //   console.log(`Pokémon: ${pokemon.name}, Tipo: ${pokemon.type}`);
-  // }
+  /* for (const pokemon of pokedex.getPokemons()) {
+    console.log(`Pokémon: ${pokemon.name}, Tipo: ${pokemon.type}`);
+  } */
+  
   for (const pokemon of pokedex) {
     console.log(`Pokémon: ${pokemon.name}, Tipo: ${pokemon.type}`);
   }
+
+  console.log();
 }
 
 main();
